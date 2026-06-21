@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+.pytest_cache/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Local backups/temps
+*.backup
+*.orig
+*_tmp.*
+
+# Data artifacts
+data/movielens/
+data/ml-*.zip*
+
+# Local reports/outputs
+reports/*.docx
+*.parquet
+
+outputs/
+
+# Large local 32M run artifacts/logs
+outputs_32m/
+outputs_32m_train.log

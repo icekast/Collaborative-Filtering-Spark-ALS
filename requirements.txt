@@ -1,0 +1,15 @@
+# Requires Python 3.11 or higher
+pyspark==3.5.6
+pandas
+numpy
+matplotlib
+seaborn
+wordcloud
+requests
+pytest
+fastapi
+uvicorn[standard]
+pyarrow
+scikit-learn
+plotly
+nbformat>=4.2

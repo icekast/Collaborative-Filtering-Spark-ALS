@@ -1,0 +1,103 @@
+services:
+  namenode:
+    image: apache/hadoop:3.3.6
+    container_name: namenode
+    user: "0:0"
+    environment:
+      - HADOOP_SERVICE=namenode
+      - HDFS_NAMENODE_USER=root
+      - HADOOP_LOG_DIR=/opt/hadoop/logs
+    ports:
+      - "9870:9870"  # NameNode web UI
+      - "8020:8020"  # NameNode RPC (fs.defaultFS)
+    volumes:
+      - ./conf/hadoop:/opt/hadoop/etc/hadoop:ro
+      - hdfs_namenode:/data/nn
+    # Run NN in foreground; format only on first boot
+    command: ["bash", "-lc", "if [ ! -d /data/nn/current ]; then hdfs namenode -format -force -nonInteractive; fi; exec hdfs namenode"]
+    healthcheck:
+      test: ["CMD-SHELL", "ps -ef | grep -q '[n]amenode'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  datanode:
+    image: apache/hadoop:3.3.6
+    container_name: datanode
+    user: "0:0"
+    environment:
+      - HADOOP_SERVICE=datanode
+      - HDFS_DATANODE_USER=root
+      - HADOOP_LOG_DIR=/opt/hadoop/logs
+    depends_on:
+      namenode:
+        condition: service_healthy
+    ports:
+      - "9864:9864"  # DataNode web UI
+    volumes:
+      - ./conf/hadoop:/opt/hadoop/etc/hadoop:ro
+      - hdfs_datanode:/data/dn
+    # Run DN in foreground
+    command: ["bash", "-lc", "exec hdfs datanode"]
+    healthcheck:
+      test: ["CMD-SHELL", "ps -ef | grep -q '[d]atanode'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  jupyter:
+    image: jupyter/pyspark-notebook
+    container_name: jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./:/home/jovyan/work
+    command: >
+      start.sh jupyter notebook --NotebookApp.token=''
+      --NotebookApp.password=''
+      --NotebookApp.disable_check_xsrf=True
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - PYTHONPATH=/home/jovyan/work
+    depends_on:
+      - namenode
+      - datanode
+  spark-master:
+    build:
+      context: .
+      dockerfile: Dockerfile.spark
+    image: local/spark:3.5.6-py311
+    container_name: spark-master
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master --host spark-master --port 7077 --webui-port 8080
+
+  spark-worker:
+    image: local/spark:3.5.6-py311
+    container_name: spark-worker
+    depends_on:
+      - spark-master
+    ports:
+      - "8081:8081"
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077 --webui-port 8081
+
+
+volumes:
+  hdfs_namenode:
+  hdfs_datanode:
+
+---
+
+services:
+  api:
+    image: python:3.11-slim
+    container_name: api
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      - PRECOMPUTE_DIR=/app/outputs_32m
+    command: bash -lc "pip install fastapi uvicorn[standard] numpy pandas pyarrow && uvicorn api.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
