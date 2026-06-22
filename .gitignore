@@ -2,6 +2,9 @@
 __pycache__/
 .pytest_cache/
 .venv/
+*.log
+*.pyc
+*.tmp
 
 # Jupyter
 .ipynb_checkpoints/
@@ -10,6 +13,7 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .vscode/
+.idea/
 
 # Local backups/temps
 *.backup
@@ -19,10 +23,11 @@ Thumbs.db
 # Data artifacts
 data/movielens/
 data/ml-*.zip*
+*.csv
+*.parquet
 
 # Local reports/outputs
 reports/*.docx
-*.parquet
 
 outputs/
 
