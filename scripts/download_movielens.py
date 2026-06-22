@@ -84,7 +84,7 @@ def existing_dataset_is_valid(target_dir: Path, archive_path: Path) -> bool:
 
     return True
 
-
+"""Download a file from the given URL and save it to the specified destination."""
 def download_archive(url: str, destination: Path) -> None:
     LOGGER.info("Downloading %s", url)
     response = requests.get(url, stream=True, timeout=60)
