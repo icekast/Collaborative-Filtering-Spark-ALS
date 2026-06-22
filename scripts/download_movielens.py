@@ -19,6 +19,8 @@ from zipfile import ZipFile
 LOGGER = logging.getLogger("movielens_download")
 
 DEFAULT_VARIANT = "32m"
+
+# Dictionary of MovieLens dataset download URLs
 DATASET_URLS: Dict[str, str] = {
     "32m": "https://files.grouplens.org/datasets/movielens/ml-32m.zip",
     "latest": "https://files.grouplens.org/datasets/movielens/ml-latest.zip",
@@ -125,7 +127,7 @@ def move_dataset_contents(extracted_root: Path, output_dir: Path) -> None:
         LOGGER.debug("Copying %s -> %s", source, destination)
         shutil.copy2(source, destination)
 
-
+"""Compute and save the checksum for the downloaded archive."""
 def record_checksum(archive_path: Path) -> None:
     checksum = compute_checksum(archive_path)
     checksum_path = archive_path.with_suffix(archive_path.suffix + CHECKSUM_SUFFIX)
