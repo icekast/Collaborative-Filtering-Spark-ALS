@@ -75,9 +75,7 @@ def _load_parquet(path: str) -> pd.DataFrame:
             continue
     return pd.DataFrame()
 
-
-def _load_user_topn() -> tuple[pd.DataFrame, ds.Dataset | None]:
-    """Load user_topn either eagerly (pandas) or lazily (pyarrow dataset).
+"""Load user_topn either eagerly (pandas) or lazily (pyarrow dataset).
 
     Spark typically writes Parquet as a directory (many part files). For large
     outputs (e.g., 32M), loading the entire dataset into pandas can exceed RAM.
@@ -86,6 +84,7 @@ def _load_user_topn() -> tuple[pd.DataFrame, ds.Dataset | None]:
     Tests use small single-file fixtures (user_topn.parquet), which we continue
     to load eagerly for simplicity.
     """
+def _load_user_topn() -> tuple[pd.DataFrame, ds.Dataset | None]:
     base = PRECOMPUTE_DIR
     dir_path = os.path.join(base, "user_topn")
     file_path = os.path.join(base, "user_topn.parquet")
