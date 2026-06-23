@@ -8,6 +8,7 @@
   --items-per-row: 6;
   --card-width: calc((100% - (var(--items-per-row) - 1) * 12px) / var(--items-per-row));
 }
+
 :root[data-theme="light"] {
   --bg: #f6f7fb;
   --panel: #ffffff;
@@ -16,6 +17,7 @@
   --chip: #e7e9f1;
   --accent: #e50914;
 }
+
 * { box-sizing: border-box; }
 body { margin: 0; font-family: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: var(--bg); color: var(--text); }
 .header { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0)); z-index: 5; }
@@ -46,15 +48,18 @@ body { margin: 0; font-family: Montserrat, system-ui, -apple-system, Segoe UI, R
   flex-wrap: wrap;
   margin: -6px 0 12px;
 }
+
 .legend-item {
   color: var(--muted);
   font-size: 0.74rem;
   line-height: 1.25;
   opacity: 0.9;
 }
+
 .legend-muted {
   opacity: 0.75;
 }
+
 .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .panel-head h2 { margin: 10px 0 8px; }
 .panel-meta { color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
