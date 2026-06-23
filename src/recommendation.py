@@ -98,6 +98,7 @@ def load_movies(spark: SparkSession, path: str) -> DataFrame:
 
 
 def build_training_pipeline(rank: int, reg_param: float, max_iter: int, implicit_prefs: bool) -> Pipeline:
+    """Build a Spark ML pipeline with StringIndexer, SQLTransformer, and ALS."""
     user_indexer = StringIndexer(inputCol="userId", outputCol="userIndex", handleInvalid="skip")
     item_indexer = StringIndexer(inputCol="movieId", outputCol="movieIndex", handleInvalid="skip")
     cast_transformer = SQLTransformer(
