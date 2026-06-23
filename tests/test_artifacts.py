@@ -8,6 +8,7 @@ from src import recommendation as rec
 
 
 def test_write_artifacts_smoke(tmp_path: Path) -> None:
+    """Smoke test for artifact writing: train a tiny model and verify outputs."""
     spark = rec.build_spark_session(app_name="test-artifacts", master="local[1]")
     try:
         ratings = spark.createDataFrame(
